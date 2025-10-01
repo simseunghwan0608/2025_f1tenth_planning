@@ -71,7 +71,7 @@ def generate_launch_description():
             {'vel_scale': 0.87},
 
             # obs
-            {'avoid_dist': 0.4}, # 0.4,
+            {'avoid_dist': 1.0}, # 0.4,
             {'avoid_buffer': 7},
             {'avoid_v_diff': 0.0},
             {'avoid_span': 0.2},

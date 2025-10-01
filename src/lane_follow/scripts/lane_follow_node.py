@@ -132,7 +132,7 @@ class LaneFollow(Node):
         overtaking_idx_csv_loc = os.path.join("src", "lane_follow", "csv", self.map_name, 'overtaking_wp_idx.npy')
         data = np.load(overtaking_idx_csv_loc, mmap_mode = 'r')
         # self.overtake_wpIdx = set(list(data))
-        self.overtake_wpIdx = set(range(10, 70)) # 190 ,240
+        self.overtake_wpIdx = set(range(20, 40))
         print(self.overtake_wpIdx)
 
         slow_idx_csv_loc = os.path.join("src", "lane_follow", "csv", self.map_name, 'slowdown_wp_idx.npy')
@@ -140,8 +140,7 @@ class LaneFollow(Node):
         self.slow_wpIdx = set(list(data2))
         print(self.slow_wpIdx)
 
-        self.corner_wpIdx = set(list(range(0, 10)) + list(range(70, 75)))
-        # 0, 80, 280, 305
+        self.corner_wpIdx = set(list(range(0, 10)) + list(range(50, 60)))
 
         # Car Status Variables
         self.lane_idx = 0
@@ -205,7 +204,7 @@ class LaneFollow(Node):
         for i in range(self.num_lanes):
             d = scipy.spatial.distance.cdist(self.lane_pos[i], self.obstacles)
             self.lane_free[i] = (np.min(d) > lane_occupied_dist)
-        print(f'lane_free_situation {self.lane_free}')
+        # print(f'lane_free_situation {self.lane_free}')
 
 
     def opponent_callback(self, opponent_msg: PoseStamped):
@@ -408,7 +407,7 @@ class LaneFollow(Node):
                         ##### if obstacle is not moving, force to switch lane ######
                         if self.opponent_v < 1.0:
                             target_v = 0.0
-                            target_v = max(self.opponent_v*0.8, 0.5)
+                            target_v = max(self.opponent_v*0.8, 0.5)  
                             for i in range(self.num_lanes):
                                 if self.lane_free[i]:
                                     target_lane_idx = i
@@ -419,13 +418,12 @@ class LaneFollow(Node):
                                     self.target_point = lane_target
                                     target_v = target_v * 0.8
                                     print('avoid')
-                                    break
+                            #         break
                         else:
                             ##### if obstacle is moving, follow it ######
                             target_v = max(self.opponent_v*0.8, 0.0)
                 # else:
                 #     target_v = max(self.opponent_v * 0.9, 0.0)
-                # 저기 주석 제거함 그리고 숫자 변경함
 
 
         R = np.array([[np.cos(curr_yaw), np.sin(curr_yaw)],
